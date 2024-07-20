@@ -18,7 +18,7 @@ type Props = {
 const menus = [
     {
         title: "All Snippets",
-        href: "/",
+        href: "/start",
         icons: <FaCodepen />,
     },
     {

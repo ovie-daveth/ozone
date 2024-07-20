@@ -18,7 +18,7 @@ const Wrapper = ({
         <div className='fixed '>
             <SideBar open={open} setIsOpen={setIsOpen} />
         </div>
-        <div className={`${open ? "ml-[253px]" : "ml-[93px]"} transition-all ease-in-out duration-300 min-h-screen py-5`}>
+        <div className={`${open ? "ml-[280px]  w-[calc(100%-300px)]" : "ml-[120px]  w-[calc(100%-150px)]"} transition-all ease-in-out duration-300 min-h-screen py-5`}>
             <div>
                 <SearchHeader />
             </div>
