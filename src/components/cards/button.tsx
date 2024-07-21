@@ -3,14 +3,15 @@ import cn from 'classnames';
 
 type Prop = {
     className?: string;
-    children: React.ReactNode
+    children: React.ReactNode,
+    type: string
 }
 
-const Button = ({ className, children }: Prop) => {
+const Button = ({ className, children, type }: Prop) => {
   return (
-    <div className={cn("border-blue-600 border-2 rounded-md py-1 flex items-center justify-center", className)}>
+    <button type={type} className={cn("border-blue-600 border-2 rounded-md py-1 flex items-center justify-center", className)}>
       {children}
-    </div>
+    </button>
   );
 }
 
