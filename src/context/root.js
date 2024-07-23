@@ -6,6 +6,7 @@ const Context = createContext(null);
 export function UserProvider({ children }) {
   const [user, setUser] = useState({});
   const [token, setToken] = useState("");
+  const [openCreate, setOpenCreate] = useState(false)  
 
   useEffect(() => {
     const storedToken = sessionStorage.getItem("token");
@@ -24,7 +25,7 @@ export function UserProvider({ children }) {
   }, [token]);
 
   return (
-    <Context.Provider value={{ user, setUser, token, setToken }}>
+    <Context.Provider value={{ user, setUser, token, setToken, openCreate, setOpenCreate }}>
       {children}
     </Context.Provider>
   );

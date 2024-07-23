@@ -5,6 +5,7 @@ import Wrapper from './Wrapper';
 type Prop = {
     children: React.ReactNode
 }
+
 const PageWrapper = ({
     children
 }: Prop) => {

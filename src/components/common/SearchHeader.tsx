@@ -6,9 +6,11 @@ import { IoIosSearch, IoIosAdd } from "react-icons/io";
 import Toggle from '../cards/Toggle';
 import { UserData } from '@/variables/UserData';
 import { getUser } from '@/services/authServices';
+import { useAuthContext } from '@/context/root';
 
 const SearchHeader = () => {
 
+  const { setOpenCreate} = useAuthContext();
   const [user, setUser] = useState<UserData>({
     name: "",
     email: "",
@@ -33,6 +35,10 @@ const SearchHeader = () => {
     }
   
   }
+
+  const createSnippet = () => {
+    setOpenCreate(true)
+  }
   
   return (
     <div className='px-4 rounded-md dark:bg-sidebar w-full py-3'>
@@ -47,7 +53,7 @@ const SearchHeader = () => {
         <div className='relative h-11 lg:w-[60%] w-[50%]'>
         <span className='absolute left-4 top-[11px] text-primary'><IoIosSearch size={20} /></span>
           <input type="text" className='bg-search-color  flex items-center justify-center outline-none rounded-full w-full h-full px-10' />
-          <button className='flex items-center justify-between gap-0 bg-primary absolute right-2 top-2 h-[70%]  rounded-full px-2 font-medium'>
+          <button onClick={createSnippet} className='flex items-center justify-between gap-0 bg-primary absolute right-2 top-2 h-[70%]  rounded-full px-2 font-medium'>
             <span><IoIosAdd size="24px" /></span>
             <p className='md:block hidden'>Snippet</p>
           </button>
