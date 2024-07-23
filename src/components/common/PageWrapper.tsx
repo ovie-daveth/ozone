@@ -3,14 +3,16 @@ import {FooterComponent} from "../Footer"
 import Wrapper from './Wrapper';
 
 type Prop = {
-    children: React.ReactNode;
+    children: React.ReactNode
 }
 const PageWrapper = ({
     children
 }: Prop) => {
+  
+
   return (
     <Wrapper>
-        <div>
+        <div className='min-h-screen'>
             {children}
         </div>
         <FooterComponent />

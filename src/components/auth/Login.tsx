@@ -16,6 +16,7 @@ export const Login = ({isOpen, setIsOpen}: Prop) => {
 
     const router = useRouter();
 
+
     const [formData, setformData] = useState({
         email: "",
         password: ""
@@ -48,9 +49,11 @@ export const Login = ({isOpen, setIsOpen}: Prop) => {
         const response = await LoginUser(formData)
         if(response.status){
             toast.success(response.message)
-            console.log("Login response", response)
-            //router.push("/start")
-            //setLoading(false)
+            console.log("Login response", response);
+            sessionStorage.setItem("token", response.data.token);
+            sessionStorage.setItem("email", response.data.user.email)
+            router.push("/start")
+            setLoading(false)
         }
 
        } catch (error) {

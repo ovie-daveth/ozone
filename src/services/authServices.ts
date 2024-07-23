@@ -32,11 +32,11 @@ export const LoginUser = async (loginData: any) => {
     }
   };
 
-  export const getUser = async () => {
+  export const getUser = async (email: string) => {
     try {
-      const response = await axios.get(`${baseUrl}/users`);
+      const response = await axios.get(`${baseUrl}/users/${email}`);
       console.log('users', response.data);
-      return response;
+      return response.data;
     } catch (error) {
       console.error('Error registering user:');
       throw error;

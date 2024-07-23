@@ -53,7 +53,7 @@ const SideBar = ({open, setIsOpen}: Props) => {
         setIsOpen(!open)   
     }
   return (
-    <div className={`bg-sidebar min-h-screen relative ${open ? "w-[250px] " : "w-[80px]"} transition-all ease-in-out duration-300 px-10`}>
+    <div className={`bg-sidebar min-h-screen relative ${open ? "w-[250px] " : "w-[80px]"} transition-all ease-in-out duration-300 px-10 sm:block hidden`}>
        <div onClick={OpenSideBar} className={`absolute -right-4 top-28 bg-sidebar rounded-full h-10 w-10 flex items-center justify-center`}>
         <span className={`bg-primary rounded-full h-6 w-6 flex items-center justify-center cursor-pointer`}>
                 {
