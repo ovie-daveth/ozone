@@ -6,10 +6,17 @@ import { MdAdd, MdBook, MdCancel, MdEdit } from 'react-icons/md'
 import { GiNotebook } from "react-icons/gi";
 import { useAuthContext } from '@/context/root'
 import { CiHashtag } from "react-icons/ci";
+import { javascript } from '@codemirror/lang-javascript';
+import CodeMirror from '@uiw/react-codemirror';
+import CodeEditor from '@/components/CodeEditor'
 
 const page = () => {
 
-
+  const [value, setValue] = React.useState("console.log('hello world!');");
+  const onChange = React.useCallback((val, viewUpdate) => {
+    console.log('val:', val);
+    setValue(val);
+  }, []);
 
   const {openCreate, setOpenCreate} = useAuthContext();
   const [isOpenTag, setIsOpenTags] = useState(false);
@@ -85,11 +92,10 @@ const page = () => {
               </div>
               <div className='border-[1.4px] rounded-lg min-h-screen py-3'>
                 <div className=' px-3 text-gray-400'>
-                  <select className='bg-transparent' name="" id="">
-                    <option value="">Javascript</option>
-                  </select>
+                 
                 </div>
-                <textarea placeholder='Your code' className='bg-transparent outline-none px-5 py-2 placeholder:font-medium text-sm max-w-[100%] min-h-[98vh] text-gray-400' />
+                <CodeEditor />
+                {/* <textarea placeholder='Your code' className='bg-transparent outline-none px-5 py-2 placeholder:font-medium text-sm max-w-[100%] min-h-[98vh] text-gray-400' /> */}
               </div>
             </form>
            </div>
