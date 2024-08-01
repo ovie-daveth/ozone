@@ -6,24 +6,30 @@ import { rubyLanguage } from '../constants/ruby';
 import { sassLanguage } from '@/constants/sass';
 import { solidityLanguage } from '@/constants/solidity';
 
-const CodeEditor = () => {
+type Prop ={
+  onChange: (value: string) => void;
+  language: string, 
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const CodeEditor = ({ onChange, language, setLanguage }: Prop) => {
   const editorRef = useRef();
   const [value, setValue] = useState(CODE_SNIPPETS.javascript);
-  const [language, setLanguage] = useState("javascript");
+
 
   const onMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
     editor.focus();
   
-      // Register the languages
-        if (!monaco.languages.getLanguages().some(({ id }) => id === 'ruby' || id === 'sass' || id === 'solidity')) {
-            monaco.languages.register({ id: 'ruby' });
-            monaco.languages.register({ id: 'sass' });
-            monaco.languages.register({ id: 'solidity' });
-            monaco.languages.setMonarchTokensProvider('ruby', rubyLanguage);
-            monaco.languages.setMonarchTokensProvider('sass', sassLanguage);
-            monaco.languages.setMonarchTokensProvider('solidity', solidityLanguage);
-        }
+    // Register the languages
+    if (!monaco.languages.getLanguages().some(({ id }) => id === 'ruby' || id === 'sass' || id === 'solidity')) {
+        monaco.languages.register({ id: 'ruby' });
+        monaco.languages.register({ id: 'sass' });
+        monaco.languages.register({ id: 'solidity' });
+        monaco.languages.setMonarchTokensProvider('ruby', rubyLanguage);
+        monaco.languages.setMonarchTokensProvider('sass', sassLanguage);
+        monaco.languages.setMonarchTokensProvider('solidity', solidityLanguage);
+    }
   };
 
   const onSelect = (e: any) => {
@@ -54,7 +60,7 @@ const CodeEditor = () => {
           defaultValue={CODE_SNIPPETS[language]}
           onMount={onMount}
           value={value}
-          onChange={(newValue: any) => setValue(newValue)}
+          onChange={(value) => onChange(value || '')}
         />
       </div>
     </div>

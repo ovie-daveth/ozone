@@ -1,14 +1,15 @@
 "use client"
 import Button from '@/components/cards/button'
 import PageWrapper from '@/components/common/PageWrapper'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdAdd, MdBook, MdCancel, MdEdit } from 'react-icons/md'
 import { GiNotebook } from "react-icons/gi";
 import { useAuthContext } from '@/context/root'
-import { CiHashtag } from "react-icons/ci";
-import { javascript } from '@codemirror/lang-javascript';
-import CodeMirror from '@uiw/react-codemirror';
-import CodeEditor from '@/components/CodeEditor'
+import SampleCodeText from '@/components/cards/SampleCodeText'
+import CreateSnippets from '@/components/CreateSnippets'
+import { SnippetsInterface } from '@/variables/SnippetsRes'
+
+const SnippetsData: SnippetsInterface[] = []
 
 const page = () => {
 
@@ -19,7 +20,7 @@ const page = () => {
   }, []);
 
   const {openCreate, setOpenCreate} = useAuthContext();
-  const [isOpenTag, setIsOpenTags] = useState(false);
+  const [isSnippet,setisSnippet] = useState(false)
 
   const openModal = (num: number) => {
    if(num === 3){
@@ -27,9 +28,11 @@ const page = () => {
    }
   }
 
-  const openTags = () => {
-    setIsOpenTags(!isOpenTag);
-  }
+  useEffect(() => {
+    if(SnippetsData.length >= 1){
+      setisSnippet(true)
+    }
+  }, [SnippetsData])
   return (
     <PageWrapper >
         <div className={`${openCreate ? "md:flex block  gap-5" : "block "}`}>
@@ -41,8 +44,16 @@ const page = () => {
                   <span>Tag</span>
                 </Button>
               </div>
-
-              <div className='mt-20 mx-auto w-[50%]'>
+               {
+                isSnippet ?  <div className={`grid ${openCreate ? "grid-cols-2":"grid-cols-3"} mt-5 gap-3`}>
+                  {
+                    SnippetsData.map((item: SnippetsInterface, index: number) => (
+                   
+                    <SampleCodeText key={index} title='Bonjour' tags={item.tags} language={item.language} date={item.date} icon={item.icon} text={item.text} />
+               
+                    ))
+                  }
+                </div> :  <div className='mt-20 mx-auto w-[50%]'>
                 <div className='flex flex-col gap-2 items-center justify-center text-center'>
                 <div>
                   <GiNotebook size="100" color="gray" />
@@ -56,49 +67,11 @@ const page = () => {
                 </div>
                 </div>
               </div>
+              }
+             
           </div>
-          <div className={`${openCreate ? "block" : "hidden"} md:w-[50%] w-full mt-5 md:min-h-screen bg-sidebar rounded-md px-5 md:relative absolute md:top-0 top-44 min-h-[500px] `}>
-            <span onClick={() => setOpenCreate(false)} className='absolute right-3 top-3 cursor-pointer hover:text-gray-300'>
-              <MdCancel size="30" color="gray" />
-            </span>
-           <div className=' mt-5'>
-            <form className='flex flex-col gap-5'>
-              <div className='flex gap-4'>
-                <label className='text-xl font-medium' htmlFor="title">T</label>
-                <textarea placeholder='New Title...' className='bg-transparent appearance-none outline-none placeholder:text-xl placeholder:font-medium text-xl max-w-[80%]' />
-              </div>
-              <div className='flex items-center gap-4 relative'>
-                {
-                  isOpenTag && <div className='absolute top-2 right-10 bg-white text-sidebar rounded-lg w-[100px] px-2 py-2 text-[12px]'>
-                  <ul className='flex flex-col gap-1'>
-                    <li className='cursor-pointer hover:bg-gray-50'>Java</li>
-                    <li className='cursor-pointer hover:bg-gray-50'>JavaScript</li>
-                  </ul>
-              </div>
-                }
-                <span className='text-primary'>
-                <CiHashtag />
-                </span>
-                <button type="button" onClick={openTags} className='bg-white text-sidebar rounded-md px-2 text-sm py-2 hover:bg-gray-100'>No tags</button>
-                <span>
-                  <MdEdit />
-                </span>
-              </div>
-              <div className='flex gap-4'>
-                <label className='text-lg font-medium text-primary' htmlFor="title">
-                  <MdBook />
-                </label>
-                <textarea placeholder='Description' className='bg-transparent outline-none border-[1.4px] rounded-lg px-5 py-2 placeholder:font-medium text-lg max-w-[80%]' />
-              </div>
-              <div className='border-[1.4px] rounded-lg min-h-screen py-3'>
-                <div className=' px-3 text-gray-400'>
-                 
-                </div>
-                <CodeEditor />
-                {/* <textarea placeholder='Your code' className='bg-transparent outline-none px-5 py-2 placeholder:font-medium text-sm max-w-[100%] min-h-[98vh] text-gray-400' /> */}
-              </div>
-            </form>
-           </div>
+          <div className={`${openCreate ? "block" : "hidden"} md:w-[50%] w-full`}>
+            <CreateSnippets setOpenCreate={setOpenCreate} />
           </div>
         </div>
     </PageWrapper>
