@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { IoIosSearch, IoIosAdd } from "react-icons/io";
 import Toggle from '../cards/Toggle';
 import { UserData } from '@/variables/UserData';
-import { getUser } from '@/services/authServices';
+import { getUser } from '@/services/apprites';
 import { useAuthContext } from '@/context/root';
 
 const SearchHeader = () => {

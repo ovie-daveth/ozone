@@ -5,7 +5,6 @@ import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from "react-icons/fc";
 import Button from '../cards/button';
 import { MdCancel } from 'react-icons/md';
-import { LoginUser } from '@/services/authServices';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 type Prop = {
@@ -46,15 +45,6 @@ export const Login = ({isOpen, setIsOpen}: Prop) => {
         
        try {
         setLoading(true)
-        const response = await LoginUser(formData)
-        if(response.status){
-            toast.success(response.message)
-            console.log("Login response", response);
-            sessionStorage.setItem("token", response.data.token);
-            sessionStorage.setItem("email", response.data.user.email)
-            router.push("/start")
-            setLoading(false)
-        }
 
        } catch (error) {
         setLoading(false)

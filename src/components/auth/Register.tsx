@@ -5,7 +5,6 @@ import { FcGoogle } from "react-icons/fc";
 import Button from '../cards/button';
 import { MdCancel } from 'react-icons/md';
 import { RegisterRequest } from '@/variables/RegisterRequest';
-import { registerUser } from '@/services/authServices';
 import { useRouter } from 'next/navigation';
 
 type Prop = {
@@ -51,12 +50,6 @@ export const Register = ({isOpen, setIsOpen}: Prop) => {
         
        try {
         setLoading(true)
-        const response = await registerUser(formData)
-        if(response.status){
-            console.log(response)
-            router.push("/start")
-            //setLoading(false)
-        }
 
        } catch (error) {
         setLoading(false)

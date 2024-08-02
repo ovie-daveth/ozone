@@ -1,9 +1,9 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
-const Context = createContext(null);
+const Context = createContext();
 
-export function UserProvider({ children }) {
+function UserProvider({ children }) {
   const [user, setUser] = useState({});
   const [token, setToken] = useState("");
   const [openCreate, setOpenCreate] = useState(false)  
@@ -31,10 +31,4 @@ export function UserProvider({ children }) {
   );
 }
 
-export function useAuthContext() {
-  const context = useContext(Context);
-  if (!context) {
-    throw new Error("useAuthContext must be used within a UserProvider");
-  }
-  return context;
-}
+export {UserProvider, Context}

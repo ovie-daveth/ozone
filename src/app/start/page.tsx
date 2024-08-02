@@ -1,10 +1,10 @@
 "use client"
 import Button from '@/components/cards/button'
 import PageWrapper from '@/components/common/PageWrapper'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { MdAdd, MdBook, MdCancel, MdEdit } from 'react-icons/md'
 import { GiNotebook } from "react-icons/gi";
-import { useAuthContext } from '@/context/root'
+import { Context, useAuthContext } from '@/context/root'
 import SampleCodeText from '@/components/cards/SampleCodeText'
 import CreateSnippets from '@/components/CreateSnippets'
 import { SnippetsInterface } from '@/variables/SnippetsRes'
@@ -12,14 +12,9 @@ import { SnippetsInterface } from '@/variables/SnippetsRes'
 const SnippetsData: SnippetsInterface[] = []
 
 const page = () => {
-
-  const [value, setValue] = React.useState("console.log('hello world!');");
-  const onChange = React.useCallback((val, viewUpdate) => {
-    console.log('val:', val);
-    setValue(val);
-  }, []);
-
-  const {openCreate, setOpenCreate} = useAuthContext();
+  
+  const {openCreate, setOpenCreate} = useContext(Context);
+  
   const [isSnippet,setisSnippet] = useState(false)
 
   const openModal = (num: number) => {
