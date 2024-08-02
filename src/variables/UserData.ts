@@ -1,6 +1,5 @@
 export interface UserData {
     name: string,
     email: string,
-    password: string,
-    isVerified: boolean
+    emailVerification: boolean
 }

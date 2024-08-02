@@ -1,39 +1,31 @@
 "use client"
 
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { IoIosSearch, IoIosAdd } from "react-icons/io";
 import Toggle from '../cards/Toggle';
 import { UserData } from '@/variables/UserData';
-import { getUser } from '@/services/apprites';
-import { useAuthContext } from '@/context/root';
+import { Context } from '@/context/root';
+import { account } from '@/services/apprites';
 
 const SearchHeader = () => {
 
-  const { setOpenCreate} = useAuthContext();
+  const { setOpenCreate} = useContext(Context);
   const [user, setUser] = useState<UserData>({
     name: "",
     email: "",
-    password: "",
-    isVerified: false
+    emailVerification: false
   })
   
-  const [email, setEmail] = useState("")
   
   useEffect(() => {
-    const email = JSON.parse(JSON.stringify(sessionStorage.getItem("email")));
-    setEmail(email);
     getUserData()
-  }, [email])
+  }, [])
   
   const getUserData = async() => {
-    console.log("email", email)
-    const response = await getUser(email);
-    if(response){
-      console.log("pageWrapper",response);
-      setUser(response.data)
-    }
-  
+    const user = await account.get();
+    console.log("user",user);
+    setUser(user as unknown as UserData);
   }
 
   const createSnippet = () => {

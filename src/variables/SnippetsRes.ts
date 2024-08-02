@@ -3,6 +3,12 @@ export interface SnippetsInterface{
     title: string,
     date: any,
     language: string,
-    tags: string[],
-    icon: any
+    tags: tagInterface[],
+    icon: any,
+    description: string
+}
+
+export interface tagInterface {
+    color: "",
+    name: ""
 }

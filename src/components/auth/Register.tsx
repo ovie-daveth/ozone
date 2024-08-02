@@ -6,6 +6,7 @@ import Button from '../cards/button';
 import { MdCancel } from 'react-icons/md';
 import { RegisterRequest } from '@/variables/RegisterRequest';
 import { useRouter } from 'next/navigation';
+import { account, ID } from '@/services/apprites';
 
 type Prop = {
     isOpen: boolean
@@ -50,7 +51,18 @@ export const Register = ({isOpen, setIsOpen}: Prop) => {
         
        try {
         setLoading(true)
-
+        const response = await account.create(ID.unique(), formData.email, formData.password, formData.name);
+        if(response){
+            console.log("registered", response)
+            await account.createEmailPasswordSession(formData.email, formData.password)
+            .then((response) => {
+                console.log("LoggedIn", response)
+                router.push("/start")
+            })
+            .catch((err)=> {
+                console.log("error", err.message)
+            })
+        }
        } catch (error) {
         setLoading(false)
        }

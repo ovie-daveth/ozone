@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,6 +15,7 @@ const config: Config = {
         "sidebar": "#171211",
         "text-secondary": "#9CA3AF",
         "search-color": "#292322",
+        "backdrop": "rgb(41, 35, 34)"
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

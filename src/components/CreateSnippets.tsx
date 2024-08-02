@@ -5,53 +5,108 @@ import { CiHashtag } from 'react-icons/ci';
 import { MdBook, MdCancel, MdEdit } from 'react-icons/md';
 import CodeEditor from './CodeEditor';
 import { SnippetsInterface } from '@/variables/SnippetsRes';
+import { db } from '@/services/db';
 
 type Prop = {
     setOpenCreate: (open: boolean) => void;
+    formData: SnippetsInterface;
+    setFormData:  React.Dispatch<React.SetStateAction<SnippetsInterface>>;
 }
 
-const tags: any[] = ["Java", "ApiCall", "MyDebug"];
+interface tagInterface {
+    color: string,
+    name: string
+}
 
-const CreateSnippets = ({ setOpenCreate }: Prop) => {
+
+const CreateSnippets = ({ setOpenCreate, formData, setFormData }: Prop) => {
     const [isOpenTag, setIsOpenTags] = useState(false);
-    const [formData, setFormData] = useState<SnippetsInterface>({
+    const [loading, setLoading] = useState({
+        tag: false
+    })
+    const [tags, setTags] = useState<tagInterface[]>([
+        {
+            name: "",
+            color: ""
+        }
+    ])
+
+    const [language, setLanguage] = useState("javascript");
+    const [forms, setForms] = useState<SnippetsInterface>({
         text: "",
         title: "",
-        date: "",
-        language: "",
+        date:  "",
+        language: language,
         tags: [],
-        icon: ""
-    });
-
-    const [language, setLanguage] = useState("javascript")
+        icon: "",
+        desc: ""
+    })
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData(prevFormData => ({
+        setForms(prevFormData => ({
             ...prevFormData,
             [name]: value
         }));
     };
 
     useEffect(() => {
-      setFormData({
-        ...formData,
-        language: language,
-        date: new Date()
-      })
+        setForms(prevFormData => ({
+            ...prevFormData,
+            [language]: language
+        }));
+
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            [language]: language
+        }));
     }, [language])
 
+    useEffect(() => {
+        setFormData(prevFormData => ({
+            ...prevFormData,
+            title: forms.title,
+            text: forms.text,
+            date: forms.date,
+            language: language,
+            tags: forms.tags,
+            icon: forms.icon,
+            desc: forms.desc
+        }));
+    }, [forms])
+
+    const getAllTAGS = async() => {
+        const response = await db.tag.getAll();
+        setLoading({
+            ...loading,
+            tag: true
+        })
+        if(response){
+            console.log(response)
+            setTags(response.documents as unknown as tagInterface[])
+            setLoading({
+                ...loading,
+                tag: false
+            })
+        }
+    }
+
+    useEffect(() => {
+      getAllTAGS();
+    }, [])
+
     const openTags = () => {
+        getAllTAGS()
         setIsOpenTags(!isOpenTag);
     }
 
     const addTags = (index: number) => {
-        const newTags = [...formData.tags, tags[index]];
+        const newTags = [...forms.tags, tags[index]];
         if (newTags.length > 5) {
             alert("cannot add more than 5 tags");
             return;
         }
-        setFormData({
+        setForms({
             ...formData,
             tags: newTags
         });
@@ -59,16 +114,34 @@ const CreateSnippets = ({ setOpenCreate }: Prop) => {
     };
 
     const handleCodeEditorChange = (value: string) => {
-        setFormData(prevFormData => ({
+        setForms(prevFormData => ({
             ...prevFormData,
             text: value
         }));
         console.log("form", formData);
     }
 
+    const closeAndSave = async() => {
+
+        const form = {
+            title: forms.title,
+            date: forms.date,
+            language: forms.language,
+            description: forms.description,
+            text: forms.text,
+            tags: forms.tags
+        }
+        const response = await db.snippet.create(form)
+        if(response){
+            console.log("success", response)
+            setOpenCreate(false);
+        }
+ 
+    }
+
     return (
         <div className={`py-3 mt-5 md:min-h-screen bg-sidebar rounded-md px-5 md:relative absolute md:top-0 top-44 min-h-[500px]`}>
-            <span onClick={() => setOpenCreate(false)} className='absolute right-3 top-3 cursor-pointer hover:text-gray-300'>
+            <span onClick={closeAndSave} className='absolute right-3 top-3 cursor-pointer hover:text-gray-300'>
                 <MdCancel size="30" color="gray" />
             </span>
             <div className='mt-5'>
@@ -77,7 +150,7 @@ const CreateSnippets = ({ setOpenCreate }: Prop) => {
                         <label className='text-xl font-medium' htmlFor="title">T</label>
                         <textarea
                             name="title"
-                            value={formData.title}
+                            value={forms.title}
                             onChange={handleChange}
                             placeholder='New Title...'
                             className='bg-transparent appearance-none outline-none placeholder:text-xl placeholder:font-medium text-xl max-w-[80%]'
@@ -88,14 +161,14 @@ const CreateSnippets = ({ setOpenCreate }: Prop) => {
                             <div className='absolute -top-10 left-40 bg-white text-sidebar rounded-lg w-[100px] px-2 py-2 text-[12px]'>
                                 <div className='flex flex-col gap-1'>
                                     {tags.map((item, index) => (
-                                        <button
-                                            onClick={() => addTags(index)}
-                                            key={index}
-                                            type="button"
-                                            className='cursor-pointer hover:bg-gray-50'
-                                        >
-                                            {item}
-                                        </button>
+                                        loading.tag ? "loading..." : <button
+                                        onClick={() => addTags(index)}
+                                        key={index}
+                                        type="button"
+                                        className='cursor-pointer hover:bg-gray-50'
+                                    >
+                                        {item?.name}
+                                    </button>
                                     ))}
                                 </div>
                             </div>
@@ -110,8 +183,8 @@ const CreateSnippets = ({ setOpenCreate }: Prop) => {
                                 </button>
                             ) : (
                                 formData.tags.map((item, index) => (
-                                    <button key={index} className='bg-white text-sidebar rounded-md px-2 text-sm py-2 hover:bg-gray-100'>
-                                        {item}
+                                    <button key={index} className={`bg-white text-${item.color} rounded-md px-2 text-sm py-2 hover:bg-gray-100`}>
+                                        {item.name}
                                     </button>
                                 ))
                             )}
@@ -125,9 +198,9 @@ const CreateSnippets = ({ setOpenCreate }: Prop) => {
                             <MdBook />
                         </label>
                         <textarea
-                            name="text"
+                            name="desc"
                             placeholder='Description'
-                            value={formData.text}
+                            value={forms.description}
                             onChange={handleChange}
                             className='bg-transparent outline-none border-[1.4px] rounded-lg px-5 py-2 placeholder:font-medium text-lg max-w-[80%]'
                         />

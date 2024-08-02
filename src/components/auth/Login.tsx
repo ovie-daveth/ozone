@@ -7,6 +7,7 @@ import Button from '../cards/button';
 import { MdCancel } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { account } from '@/services/apprites';
 type Prop = {
     isOpen: boolean
     setIsOpen: Dispatch<SetStateAction<{ login: boolean; register: boolean }>>;
@@ -14,7 +15,6 @@ type Prop = {
 export const Login = ({isOpen, setIsOpen}: Prop) => {
 
     const router = useRouter();
-
 
     const [formData, setformData] = useState({
         email: "",
@@ -45,7 +45,11 @@ export const Login = ({isOpen, setIsOpen}: Prop) => {
         
        try {
         setLoading(true)
-
+        const response = await account.createEmailPasswordSession(formData.email, formData.password);
+        if(response){
+            console.log("login", response)
+            router.push("/start")
+        } 
        } catch (error) {
         setLoading(false)
        }
